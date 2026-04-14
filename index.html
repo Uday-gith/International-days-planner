@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wiki Club SATI – International Days Content Planner</title>
+<meta name="description" content="Content planning tool for Wiki Club SATI – schedule, nominate, and plan posts for international observance days.">
+<meta name="keywords" content="Wiki Club SATI, International Days, Content Planner, Wikipedia, Wikimedia">
+<meta property="og:title" content="Wiki Club SATI – International Days Content Planner">
+<meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/WIKI_CLUB_SATI_Logo.svg/1280px-WIKI_CLUB_SATI_Logo.svg.png">
+<link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/WIKI_CLUB_SATI_Logo.svg/1280px-WIKI_CLUB_SATI_Logo.svg.png">
+<style>
+:root{--bg:#07091a;--bg2:#0d1230;--card:rgba(255,255,255,.05);--card-border:rgba(255,255,255,.1);--p:#7c3aed;--pl:#a78bfa;--c:#06b6d4;--cl:#67e8f9;--g:#10b981;--y:#f59e0b;--r:#ef4444;--pk:#ec4899;--tx:#eef2ff;--tx2:#94a3b8;--tx3:#475569;--grd:linear-gradient(135deg,#7c3aed,#06b6d4)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
+body.light{--bg:#f1f5f9;--bg2:#e2e8f0;--card:rgba(0,0,0,.04);--card-border:rgba(0,0,0,.1);--tx:#1e293b;--tx2:#475569;--tx3:#94a3b8}
+
+/* ANIMATED BACKGROUND */
+.bg-orbs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.15;animation:drift 20s infinite alternate}
+.orb1{width:500px;height:500px;background:var(--p);top:-100px;left:-100px;animation-duration:22s}
+.orb2{width:400px;height:400px;background:var(--c);bottom:-100px;right:-100px;animation-duration:18s;animation-direction:alternate-reverse}
+.orb3{width:300px;height:300px;background:var(--pk);top:40%;left:40%;animation-duration:25s}
+@keyframes drift{0%{transform:translate(0,0) scale(1)}100%{transform:translate(60px,40px) scale(1.1)}}
+
+/* NAVIGATION */
+nav{position:sticky;top:0;z-index:100;background:rgba(7,9,26,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--card-border);padding:12px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.nav-logo{height:44px;width:auto;flex-shrink:0}
+.nav-title{font-size:1.1rem;font-weight:700;background:var(--grd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;flex:1;min-width:200px}
+.nav-search{flex:1;max-width:280px;position:relative}
+.nav-search input{width:100%;background:var(--card);border:1px solid var(--card-border);border-radius:999px;padding:8px 16px 8px 36px;color:var(--tx);font-size:.85rem;outline:none;transition:.2s}
+.nav-search input:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(124,58,237,.2)}
+.nav-search .si{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:.5;pointer-events:none}
+.nav-btns{display:flex;gap:8px;align-items:center}
+.btn-icon{background:var(--card);border:1px solid var(--card-border);color:var(--tx);border-radius:8px;padding:7px 12px;cursor:pointer;font-size:.8rem;transition:.2s;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.btn-icon:hover{background:var(--p);border-color:var(--p)}
+
+/* TRENDING BANNER */
+.trending{background:linear-gradient(90deg,rgba(124,58,237,.3),rgba(6,182,212,.3));border-bottom:1px solid var(--card-border);padding:10px 20px;display:flex;align-items:center;gap:12px;overflow:hidden;position:relative;z-index:1}
+.trending-label{font-size:.75rem;font-weight:700;color:var(--y);white-space:nowrap;display:flex;align-items:center;gap:6px}
+.trending-scroll{display:flex;gap:20px;overflow:hidden;mask:linear-gradient(90deg,transparent,black 5%,black 95%,transparent)}
+.trending-items{display:flex;gap:20px;animation:scroll 40s linear infinite;white-space:nowrap}
+.trending-items:hover{animation-play-state:paused}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.t-chip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:4px 12px;font-size:.78rem;cursor:pointer;transition:.2s;flex-shrink:0}
+.t-chip:hover{background:var(--p);border-color:var(--p)}
+.t-chip .days{color:var(--y);font-weight:600}
+
+/* MAIN LAYOUT */
+.main{position:relative;z-index:1;display:grid;grid-template-columns:1fr 320px;gap:20px;max-width:1300px;margin:0 auto;padding:20px}
+@media(max-width:900px){.main{grid-template-columns:1fr}}
+
+/* CALENDAR */
+.cal-card{background:var(--card);border:1px solid var(--card-border);border-radius:20px;padding:20px;backdrop-filter:blur(10px)}
+.cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:12px}
+.cal-title{font-size:1.4rem;font-weight:700;background:var(--grd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cal-nav{display:flex;gap:8px}
+.cal-nav button{background:var(--card);border:1px solid var(--card-border);color:var(--tx);border-radius:8px;padding:6px 14px;cursor:pointer;font-size:.85rem;transition:.2s}
+.cal-nav button:hover{background:var(--p);border-color:var(--p)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.day-name{text-align:center;font-size:.72rem;font-weight:600;color:var(--tx2);padding:6px 0;text-transform:uppercase;letter-spacing:.05em}
+.day-name:first-child{color:var(--r)}
+.day-cell{border-radius:10px;padding:8px 4px;min-height:70px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;font-size:.8rem}
+.day-cell.empty{background:rgba(255,255,255,.02);cursor:default;opacity:.3}
+.day-cell.no-event{background:var(--card);border:1px solid var(--card-border)}
+.day-cell.no-event:hover{background:rgba(255,255,255,.08)}
+.day-cell.has-event{background:linear-gradient(135deg,rgba(124,58,237,.2),rgba(6,182,212,.2));border:1px solid rgba(124,58,237,.4);font-weight:600}
+.day-cell.has-event:hover{background:linear-gradient(135deg,rgba(124,58,237,.4),rgba(6,182,212,.4));transform:translateY(-2px);box-shadow:0 8px 24px rgba(124,58,237,.3)}
+.day-cell.selected{background:var(--grd);border-color:transparent;box-shadow:0 8px 32px rgba(124,58,237,.5);transform:scale(1.05)}
+.day-cell.today{outline:2px solid var(--y);outline-offset:2px}
+.day-cell.trending-day::after{content:'🔥';position:absolute;top:2px;right:2px;font-size:.7rem}
+.day-num{font-size:1rem;font-weight:700;line-height:1}
+.event-pill{background:rgba(255,255,255,.15);border-radius:4px;padding:2px 5px;font-size:.62rem;margin-top:3px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.multi-pill{font-size:.6rem;color:var(--cl);margin-top:2px}
+
+/* EVENT DETAIL PANEL */
+.event-panel{position:relative;z-index:1;max-width:1300px;margin:0 20px 20px;background:var(--card);border:1px solid var(--card-border);border-radius:20px;padding:24px;backdrop-filter:blur(10px);display:none;animation:slideUp .3s ease}
+.event-panel.visible{display:block}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.ep-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.ep-title{font-size:1.3rem;font-weight:700}
+.ep-close{background:rgba(255,255,255,.1);border:none;color:var(--tx);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:.85rem}
+.ep-close:hover{background:var(--r)}
+.ep-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.tag{border-radius:999px;padding:4px 12px;font-size:.72rem;font-weight:600;cursor:default;border:1px solid}
+.ep-events{display:flex;flex-direction:column;gap:16px}
+.ep-event{background:rgba(255,255,255,.04);border:1px solid var(--card-border);border-radius:14px;padding:16px}
+.ep-event-name{font-size:1rem;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.un-badge{background:rgba(6,182,212,.2);border:1px solid var(--c);color:var(--cl);border-radius:4px;padding:2px 6px;font-size:.65rem;font-weight:700}
+.ep-desc{color:var(--tx2);font-size:.88rem;line-height:1.6;margin-bottom:12px}
+.wiki-status{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;padding:4px 10px;border-radius:999px;margin-bottom:12px}
+.wiki-ok{background:rgba(16,185,129,.15);border:1px solid var(--g);color:#6ee7b7}
+.wiki-missing{background:rgba(239,68,68,.15);border:1px solid var(--r);color:#fca5a5}
+.wiki-checking{background:rgba(245,158,11,.15);border:1px solid var(--y);color:#fde68a}
+.ep-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.btn{border-radius:10px;padding:8px 16px;font-size:.82rem;font-weight:600;cursor:pointer;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--grd);color:#fff}
+.btn-primary:hover{opacity:.85;transform:translateY(-1px)}
+.btn-outline{background:var(--card);border:1px solid var(--card-border);color:var(--tx)}
+.btn-outline:hover{background:rgba(255,255,255,.1);transform:translateY(-1px)}
+.btn-green{background:rgba(16,185,129,.2);border:1px solid var(--g);color:#6ee7b7}
+.btn-green:hover{background:var(--g);color:#fff}
+.btn-yellow{background:rgba(245,158,11,.2);border:1px solid var(--y);color:#fde68a}
+.btn-yellow:hover{background:var(--y);color:#1e293b}
+.btn-pink{background:rgba(236,72,153,.2);border:1px solid var(--pk);color:#f9a8d4}
+.btn-pink:hover{background:var(--pk);color:#fff}
+
+/* SIDEBAR */
+.sidebar{display:flex;flex-direction:column;gap:16px}
+.side-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:16px;backdrop-filter:blur(10px)}
+.side-title{font-size:.9rem;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.side-title span{font-size:1rem}
+.nom-item{background:rgba(255,255,255,.04);border:1px solid var(--card-border);border-radius:10px;padding:10px;margin-bottom:8px;font-size:.8rem;position:relative}
+.nom-item-date{color:var(--pl);font-weight:600;font-size:.75rem;margin-bottom:3px}
+.nom-item-name{font-weight:600;margin-bottom:3px}
+.nom-item-meta{color:var(--tx2);font-size:.72rem}
+.nom-item-del{position:absolute;top:8px;right:8px;background:none;border:none;color:var(--r);cursor:pointer;font-size:.85rem;opacity:.6}
+.nom-item-del:hover{opacity:1}
+.ldr-item{display:flex;align-items:center;gap:10px;padding:8px;border-radius:8px;margin-bottom:6px;background:rgba(255,255,255,.03)}
+.ldr-rank{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0}
+.ldr-rank-1{background:linear-gradient(135deg,#f59e0b,#fcd34d);color:#1e293b}
+.ldr-rank-2{background:linear-gradient(135deg,#94a3b8,#cbd5e1);color:#1e293b}
+.ldr-rank-3{background:linear-gradient(135deg,#d97706,#fbbf24);color:#1e293b}
+.ldr-rank-n{background:var(--card-border);color:var(--tx2)}
+.ldr-bar{flex:1}
+.ldr-name{font-size:.78rem;font-weight:600}
+.ldr-count{font-size:.7rem;color:var(--tx2)}
+.ldr-progress{height:4px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:3px}
+.ldr-fill{height:100%;border-radius:2px;background:var(--grd);transition:.5s}
+.export-btns{display:flex;flex-direction:column;gap:8px}
+
+/* MODALS */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:var(--bg2);border:1px solid var(--card-border);border-radius:20px;padding:24px;max-width:540px;width:100%;max-height:90vh;overflow-y:auto;animation:slideUp .3s ease;position:relative}
+.modal-title{font-size:1.2rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.modal-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.1);border:none;color:var(--tx);border-radius:8px;padding:4px 10px;cursor:pointer;font-size:1rem}
+.modal-close:hover{background:var(--r)}
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:.82rem;font-weight:600;color:var(--tx2);margin-bottom:6px}
+.form-input{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--card-border);border-radius:10px;padding:10px 14px;color:var(--tx);font-size:.88rem;outline:none;transition:.2s}
+.form-input:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(124,58,237,.2)}
+.form-input::placeholder{color:var(--tx3)}
+select.form-input option{background:var(--bg2)}
+.platform-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.platform-btn{background:rgba(255,255,255,.04);border:1px solid var(--card-border);border-radius:10px;padding:8px;text-align:center;cursor:pointer;transition:.2s;font-size:.78rem;user-select:none}
+.platform-btn:hover{background:rgba(255,255,255,.1)}
+.platform-btn.selected{background:rgba(124,58,237,.2);border-color:var(--p);color:var(--pl)}
+.platform-btn .pi{display:block;font-size:1.4rem;margin-bottom:4px}
+.reminder-checks{display:flex;gap:16px;flex-wrap:wrap}
+.check-item{display:flex;align-items:center;gap:8px;font-size:.82rem;cursor:pointer}
+.check-item input{accent-color:var(--p)}
+.gcal-btn{background:linear-gradient(135deg,#4285f4,#34a853);border:none;color:#fff;border-radius:10px;padding:10px 16px;cursor:pointer;font-size:.85rem;font-weight:600;width:100%;margin-top:8px;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.gcal-btn:hover{opacity:.85}
+.caption-output{background:rgba(255,255,255,.04);border:1px solid var(--card-border);border-radius:12px;padding:16px;margin-top:14px;font-size:.85rem;line-height:1.7;min-height:120px;white-space:pre-wrap;word-break:break-word}
+.caption-loading{display:flex;align-items:center;justify-content:center;gap:10px;padding:30px;color:var(--tx2)}
+.spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,.2);border-top-color:var(--p);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.admin-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.admin-table th{background:rgba(255,255,255,.08);padding:8px 10px;text-align:left;font-weight:600;color:var(--tx2);border-bottom:1px solid var(--card-border)}
+.admin-table td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.04)}
+.admin-table tr:hover td{background:rgba(255,255,255,.04)}
+.admin-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat-box{background:rgba(255,255,255,.05);border:1px solid var(--card-border);border-radius:12px;padding:12px;text-align:center}
+.stat-num{font-size:1.8rem;font-weight:700;background:var(--grd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:.72rem;color:var(--tx2)}
+.share-url{background:rgba(255,255,255,.06);border:1px solid var(--card-border);border-radius:10px;padding:10px 14px;font-size:.8rem;word-break:break-all;color:var(--cl);margin:10px 0}
+.toast{position:fixed;bottom:30px;right:30px;background:#1e293b;border:1px solid var(--card-border);border-radius:12px;padding:12px 20px;font-size:.85rem;z-index:2000;animation:slideIn .3s ease;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+.toast.success{border-color:var(--g);color:#6ee7b7}
+.toast.error{border-color:var(--r);color:#fca5a5}
+@keyframes slideIn{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* PLATFORM ICONS */
+.pi-inst{color:#e1306c}.pi-li{color:#0a66c2}.pi-tw{color:#1d9bf0}.pi-fb{color:#1877f2}.pi-blog{color:#f97316}.pi-wiki{color:var(--tx)}
+
+/* FOOTER */
+footer{position:relative;z-index:1;text-align:center;padding:24px 20px;color:var(--tx2);font-size:.8rem;border-top:1px solid var(--card-border);margin-top:20px}
+footer a{color:var(--cl);text-decoration:none}
+footer a:hover{text-decoration:underline}
+
+/* SEARCH RESULTS */
+.search-results{position:absolute;top:100%;left:0;right:0;background:var(--bg2);border:1px solid var(--card-border);border-radius:12px;margin-top:4px;overflow:hidden;z-index:200;display:none}
+.search-results.open{display:block}
+.sr-item{padding:10px 14px;cursor:pointer;font-size:.82rem;transition:.15s;display:flex;flex-direction:column;gap:2px}
+.sr-item:hover{background:rgba(255,255,255,.08)}
+.sr-item-name{font-weight:600}
+.sr-item-date{color:var(--tx2);font-size:.72rem}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:20px;color:var(--tx2);font-size:.82rem}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .cal-grid{gap:3px}
+  .day-cell{min-height:52px;padding:4px 2px;font-size:.7rem}
+  .day-num{font-size:.85rem}
+  .event-pill{display:none}
+  .platform-grid{grid-template-columns:repeat(2,1fr)}
+  .admin-stats{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ANIMATED BG -->
+<div class="bg-orbs"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div></div>
+
+<!-- NAVIGATION -->
+<nav>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/WIKI_CLUB_SATI_Logo.svg/1280px-WIKI_CLUB_SATI_Logo.svg.png" alt="Wiki Club SATI" class="nav-logo" onerror="this.style.display='none'">
+  <div class="nav-title">📅 International Days Content Planner</div>
+  <div class="nav-search">
+    <span class="si">🔍</span>
+    <input type="text" id="searchInput" placeholder="Search events...">
+    <div class="search-results" id="searchResults"></div>
+  </div>
+  <div class="nav-btns">
+    <button class="btn-icon" onclick="openAdmin()">🔐 Admin</button>
+    <button class="btn-icon" id="themeBtn" onclick="toggleTheme()">🌙 Dark</button>
+  </div>
+</nav>
+
+<!-- TRENDING BANNER -->
+<div class="trending" id="trendingBanner">
+  <div class="trending-label">🔥 TRENDING SOON</div>
+  <div class="trending-scroll">
+    <div class="trending-items" id="trendingItems"></div>
+    <div class="trending-items" id="trendingItems2"></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- CALENDAR -->
+  <div>
+    <div class="cal-card">
+      <div class="cal-header">
+        <div class="cal-nav">
+          <button onclick="changeMonth(-1)">◀ Prev</button>
+          <button onclick="goToday()">Today</button>
+        </div>
+        <h2 class="cal-title" id="calTitle">April 2026</h2>
+        <div class="cal-nav">
+          <button onclick="changeMonth(1)">Next ▶</button>
+        </div>
+      </div>
+      <div class="cal-grid" id="dayNames"></div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <!-- Upcoming Nominations -->
+    <div class="side-card">
+      <div class="side-title"><span>📋</span> My Nominations</div>
+      <div id="nominationsList"><div class="empty-state">No nominations yet.<br>Click any event to nominate!</div></div>
+    </div>
+    <!-- Leaderboard -->
+    <div class="side-card">
+      <div class="side-title"><span>🏆</span> Team Leaderboard</div>
+      <div id="leaderboard"><div class="empty-state">No entries yet</div></div>
+    </div>
+    <!-- Export -->
+    <div class="side-card">
+      <div class="side-title"><span>📤</span> Export</div>
+      <div class="export-btns">
+        <button class="btn btn-outline" onclick="exportCSV()">📊 Export CSV</button>
+        <button class="btn btn-outline" onclick="exportICS()">📆 Export All to ICS</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EVENT DETAIL PANEL -->
+<div class="event-panel" id="eventPanel">
+  <div class="ep-header">
+    <div>
+      <div style="color:var(--tx2);font-size:.8rem;margin-bottom:4px" id="epDate"></div>
+      <div class="ep-title" id="epTitle">Event Details</div>
+    </div>
+    <button class="ep-close" onclick="closeEventPanel()">✕ Close</button>
+  </div>
+  <div class="ep-tags" id="epTags"></div>
+  <div class="ep-events" id="epEvents"></div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  Created by <a href="https://meta.wikimedia.org/wiki/User:Shoot_stufz" target="_blank">Uday Dongre</a> |
+  Inspired by <a href="https://suyashdwivedi.github.io/international_days.html" target="_blank">Suyash Dwivedi's International Days Calendar</a> |
+  Updated on: April 14, 2026
+</footer>
+
+<!-- ============ MODALS ============ -->
+
+<!-- NOMINATION MODAL -->
+<div class="modal-overlay" id="nominationModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('nominationModal')">✕</button>
+    <div class="modal-title">📝 Nominate for Content</div>
+    <div id="nomEventInfo" style="background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.3);border-radius:10px;padding:12px;margin-bottom:16px;font-size:.85rem;color:var(--pl)"></div>
+    <div class="form-group">
+      <label class="form-label">Your Name *</label>
+      <input type="text" class="form-input" id="nomName" placeholder="e.g. Uday Dongre">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Your Email * (for reminders)</label>
+      <input type="email" class="form-input" id="nomEmail" placeholder="you@example.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Team Name (optional)</label>
+      <input type="text" class="form-input" id="nomTeam" placeholder="e.g. Wiki Club SATI Graphics Team">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Platform(s) for Post</label>
+      <div class="platform-grid">
+        <div class="platform-btn" data-platform="Instagram" onclick="togglePlatform(this)"><span class="pi pi-inst">📸</span>Instagram</div>
+        <div class="platform-btn" data-platform="LinkedIn" onclick="togglePlatform(this)"><span class="pi pi-li">💼</span>LinkedIn</div>
+        <div class="platform-btn" data-platform="Twitter/X" onclick="togglePlatform(this)"><span class="pi pi-tw">🐦</span>Twitter/X</div>
+        <div class="platform-btn" data-platform="Facebook" onclick="togglePlatform(this)"><span class="pi pi-fb">📘</span>Facebook</div>
+        <div class="platform-btn" data-platform="Blog" onclick="togglePlatform(this)"><span class="pi pi-blog">✍️</span>Blog Post</div>
+        <div class="platform-btn" data-platform="Wikipedia" onclick="togglePlatform(this)"><span class="pi pi-wiki">📖</span>Wikipedia</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Reminder Schedule</label>
+      <div class="reminder-checks">
+        <label class="check-item"><input type="checkbox" id="rem7" checked> 7 days before</label>
+        <label class="check-item"><input type="checkbox" id="rem2" checked> 2 days before</label>
+        <label class="check-item"><input type="checkbox" id="rem1" checked> 1 day before</label>
+      </div>
+    </div>
+    <button class="gcal-btn" id="gcalBtn" onclick="addToGoogleCalendar()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M19.5 22h-15A2.5 2.5 0 0 1 2 19.5v-15A2.5 2.5 0 0 1 4.5 2H7v2H4.5a.5.5 0 0 0-.5.5v15a.5.5 0 0 0 .5.5h15a.5.5 0 0 0 .5-.5V17h2v2.5a2.5 2.5 0 0 1-2.5 2.5zM9 2h6v2H9zm12 8h-2V7h-3V5h3a2 2 0 0 1 2 2z"/></svg>
+      Add Reminder to Google Calendar
+    </button>
+    <div style="margin-top:8px;margin-bottom:16px">
+      <button class="btn btn-outline" style="width:100%" onclick="downloadEventICS()">📥 Download .ics File (iCal / Outlook)</button>
+    </div>
+    <button class="btn btn-primary" style="width:100%" onclick="submitNomination()">✅ Submit Nomination</button>
+    <p style="font-size:.72rem;color:var(--tx2);margin-top:10px;text-align:center">Nominations are saved locally on your device. Download ICS or add to Google Calendar to get calendar reminders.</p>
+  </div>
+</div>
+
+<!-- AI CAPTION MODAL -->
+<div class="modal-overlay" id="captionModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('captionModal')">✕</button>
+    <div class="modal-title">✨ AI Caption Generator</div>
+    <div id="captionEventInfo" style="background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.3);border-radius:10px;padding:12px;margin-bottom:16px;font-size:.85rem;color:var(--cl)"></div>
+    <div class="form-group">
+      <label class="form-label">Platform</label>
+      <select class="form-input" id="captionPlatform">
+        <option>Instagram</option>
+        <option>LinkedIn</option>
+        <option>Twitter/X</option>
+        <option>Facebook</option>
+        <option>Blog</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Tone</label>
+      <select class="form-input" id="captionTone">
+        <option>Informative & Professional</option>
+        <option>Inspiring & Motivational</option>
+        <option>Casual & Fun</option>
+        <option>Formal & Educational</option>
+        <option>Call-to-Action</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Your Anthropic API Key (optional – for real AI captions)</label>
+      <input type="password" class="form-input" id="apiKeyInput" placeholder="sk-ant-... (stored locally only)">
+      <div style="font-size:.7rem;color:var(--tx2);margin-top:4px">Leave blank to use smart template-based generation. Key is stored only in your browser.</div>
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-bottom:10px" onclick="generateCaption()">✨ Generate Caption</button>
+    <div id="captionOutput"></div>
+  </div>
+</div>
+
+<!-- SHARE MODAL -->
+<div class="modal-overlay" id="shareModal">
+  <div class="modal" style="max-width:420px">
+    <button class="modal-close" onclick="closeModal('shareModal')">✕</button>
+    <div class="modal-title">🔗 Share Reminder Link</div>
+    <p style="font-size:.85rem;color:var(--tx2);margin-bottom:10px">Share this link so teammates can quickly find and nominate for this event:</p>
+    <div class="share-url" id="shareUrl"></div>
+    <button class="btn btn-primary" style="width:100%" onclick="copyShareLink()">📋 Copy Link</button>
+  </div>
+</div>
+
+<!-- ADMIN MODAL -->
+<div class="modal-overlay" id="adminModal">
+  <div class="modal" style="max-width:800px">
+    <button class="modal-close" onclick="closeModal('adminModal')">✕</button>
+    <div id="adminContent"></div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   INTERNATIONAL DAYS DATA
+   ========================================================= */
+const internationalDays = {
+  "1-1":[{name:"New Year's Day",desc:"Global celebration of the beginning of a new year.",un:false,wiki:"New_Year%27s_Day",tags:["culture","celebration"]}],
+  "1-4":[{name:"World Braille Day",desc:"Celebrates Braille as a means of communication for the visually impaired.",un:true,wiki:"World_Braille_Day",tags:["rights","education","health"]}],
+  "1-24":[{name:"International Day of Education",desc:"Recognizes the role of education for peace and development.",un:true,wiki:"International_Day_of_Education",tags:["education"]}],
+  "1-26":[{name:"International Day of Clean Energy",desc:"Promotes sustainable energy for all.",un:true,wiki:"Sustainable_energy",tags:["environment","science"]}],
+  "1-27":[{name:"International Holocaust Remembrance Day",desc:"Honors victims of the Holocaust and promotes Holocaust education.",un:true,wiki:"International_Holocaust_Remembrance_Day",tags:["peace","rights","history"]}],
+  "2-2":[{name:"World Wetlands Day",desc:"Raises awareness about the vital role of wetlands for people and planet.",un:true,wiki:"World_Wetlands_Day",tags:["environment","wildlife"]}],
+  "2-4":[{name:"World Cancer Day",desc:"Unites people to raise awareness and take action against cancer.",un:false,wiki:"World_Cancer_Day",tags:["health"]}],
+  "2-6":[{name:"International Day of Zero Tolerance to FGM",desc:"Aims to eradicate female genital mutilation worldwide.",un:true,wiki:"International_Day_of_Zero_Tolerance_to_Female_Genital_Mutilation",tags:["rights","women","health"]}],
+  "2-11":[{name:"International Day of Women and Girls in Science",desc:"Promotes full and equal access to science for women and girls.",un:true,wiki:"International_Day_of_Women_and_Girls_in_Science",tags:["women","science","education"]}],
+  "2-13":[{name:"World Radio Day",desc:"Celebrates radio as a medium for peace and development.",un:true,wiki:"World_Radio_Day",tags:["media","culture"]}],
+  "2-20":[{name:"World Day of Social Justice",desc:"Promotes efforts to tackle poverty, exclusion, and unemployment.",un:true,wiki:"World_Day_of_Social_Justice",tags:["rights","peace"]}],
+  "2-21":[{name:"International Mother Language Day",desc:"Promotes linguistic and cultural diversity and multilingualism.",un:true,wiki:"International_Mother_Language_Day",tags:["culture","education","language"]}],
+  "3-3":[{name:"World Wildlife Day",desc:"Celebrates wild fauna and flora and raises awareness of conservation.",un:true,wiki:"World_Wildlife_Day",tags:["wildlife","environment"]}],
+  "3-8":[{name:"International Women's Day",desc:"Celebrates the social, economic, cultural, and political achievements of women.",un:true,wiki:"International_Women%27s_Day",tags:["women","rights","celebration"]}],
+  "3-20":[{name:"International Day of Happiness",desc:"Recognizes the relevance of happiness and well-being as universal goals.",un:true,wiki:"International_Day_of_Happiness",tags:["culture","health"]}],
+  "3-21":[
+    {name:"International Day of Forests",desc:"Celebrates and raises awareness of the importance of all types of forests.",un:true,wiki:"International_Day_of_Forests",tags:["environment","wildlife"]},
+    {name:"World Down Syndrome Day",desc:"Raises awareness about Down syndrome and promotes inclusion.",un:true,wiki:"World_Down_Syndrome_Day",tags:["health","rights"]},
+    {name:"International Day for Elimination of Racial Discrimination",desc:"Calls for efforts to eliminate all forms of racial discrimination.",un:true,wiki:"International_Day_for_the_Elimination_of_Racial_Discrimination",tags:["rights","peace"]}
+  ],
+  "3-22":[{name:"World Water Day",desc:"Focuses on the importance of freshwater and sustainable water management.",un:true,wiki:"World_Water_Day",tags:["environment","science"]}],
+  "3-24":[{name:"World Tuberculosis Day",desc:"Raises public awareness about the health, social and economic consequences of TB.",un:true,wiki:"World_Tuberculosis_Day",tags:["health"]}],
+  "4-2":[{name:"World Autism Awareness Day",desc:"Highlights the need to improve quality of life of those with autism.",un:true,wiki:"World_Autism_Awareness_Day",tags:["health","rights"]}],
+  "4-6":[{name:"International Day of Sport for Development and Peace",desc:"Recognizes the positive role sport plays in society.",un:true,wiki:"International_Day_of_Sport_for_Development_and_Peace",tags:["peace","culture"]}],
+  "4-7":[{name:"World Health Day",desc:"Marks the founding of WHO and raises awareness on a specific health theme.",un:true,wiki:"World_Health_Day",tags:["health"]}],
+  "4-12":[{name:"International Day of Human Space Flight",desc:"Commemorates the first human space flight by Yuri Gagarin.",un:true,wiki:"International_Day_of_Human_Space_Flight",tags:["science","history"]}],
+  "4-22":[{name:"International Mother Earth Day",desc:"Promotes harmony with nature and the Earth.",un:true,wiki:"Earth_Day",tags:["environment"]}],
+  "4-23":[
+    {name:"World Book and Copyright Day",desc:"Promotes reading, publishing, and the culture of books.",un:true,wiki:"World_Book_and_Copyright_Day",tags:["education","culture","media"]},
+    {name:"English Language Day",desc:"Celebrates the English language and cultural diversity.",un:true,wiki:"English_Language_Day",tags:["culture","language"]}
+  ],
+  "4-25":[{name:"World Malaria Day",desc:"Highlights the global effort to control malaria.",un:true,wiki:"World_Malaria_Day",tags:["health"]}],
+  "4-30":[{name:"International Jazz Day",desc:"Celebrates jazz and its role in promoting peace and cooperation.",un:true,wiki:"International_Jazz_Day",tags:["culture","music","peace"]}],
+  "5-1":[{name:"International Workers' Day",desc:"Celebrates achievements of workers and the labour movement.",un:false,wiki:"International_Workers%27_Day",tags:["rights","history"]}],
+  "5-3":[{name:"World Press Freedom Day",desc:"Raises awareness of the importance of freedom of the press.",un:true,wiki:"World_Press_Freedom_Day",tags:["rights","media"]}],
+  "5-15":[{name:"International Day of Families",desc:"Promotes awareness of issues relating to families and demographic processes.",un:true,wiki:"International_Day_of_Families",tags:["culture","rights"]}],
+  "5-20":[{name:"World Bee Day",desc:"Raises awareness of the importance of pollinators and their contribution to sustainable development.",un:true,wiki:"World_Bee_Day",tags:["environment","wildlife","food"]}],
+  "5-21":[{name:"International Tea Day",desc:"Raises awareness of the long history and cultural significance of tea.",un:true,wiki:"International_Tea_Day",tags:["culture","food"]}],
+  "5-22":[{name:"International Day for Biological Diversity",desc:"Promotes understanding and awareness of biodiversity issues.",un:true,wiki:"International_Day_for_Biological_Diversity",tags:["environment","wildlife","science"]}],
+  "5-29":[{name:"International Day of UN Peacekeepers",desc:"Honors all men and women who have served in UN peacekeeping operations.",un:true,wiki:"International_Day_of_UN_Peacekeepers",tags:["peace","rights"]}],
+  "5-31":[{name:"World No-Tobacco Day",desc:"Raises awareness of the harmful effects of tobacco use.",un:true,wiki:"World_No_Tobacco_Day",tags:["health"]}],
+  "6-3":[{name:"World Bicycle Day",desc:"Highlights the benefits of using the bicycle for transport and recreation.",un:true,wiki:"World_Bicycle_Day",tags:["environment","health","culture"]}],
+  "6-5":[{name:"World Environment Day",desc:"Encourages worldwide awareness and action for the protection of our environment.",un:true,wiki:"World_Environment_Day",tags:["environment"]}],
+  "6-8":[{name:"World Oceans Day",desc:"Highlights the importance of the ocean in our lives and the threats it faces.",un:true,wiki:"World_Oceans_Day",tags:["environment","ocean","wildlife"]}],
+  "6-12":[{name:"World Day Against Child Labour",desc:"Raises awareness and activism to prevent child labour.",un:true,wiki:"World_Day_Against_Child_Labour",tags:["rights","children"]}],
+  "6-14":[{name:"World Blood Donor Day",desc:"Raises awareness about the need for safe blood and blood products.",un:true,wiki:"World_Blood_Donor_Day",tags:["health"]}],
+  "6-20":[{name:"World Refugee Day",desc:"Celebrates the strength, courage, and resilience of millions of refugees.",un:true,wiki:"World_Refugee_Day",tags:["rights","peace","culture"]}],
+  "6-21":[{name:"International Day of Yoga",desc:"Highlights the many benefits of practicing yoga.",un:true,wiki:"International_Day_of_Yoga",tags:["health","culture"]}],
+  "6-26":[{name:"International Day against Drug Abuse and Illicit Trafficking",desc:"Raises awareness about the problem illicit drugs represent to society.",un:true,wiki:"International_Day_Against_Drug_Abuse_and_Illicit_Trafficking",tags:["health","rights"]}],
+  "7-11":[{name:"World Population Day",desc:"Focuses attention on the urgency and importance of population issues.",un:true,wiki:"World_Population_Day",tags:["science","rights"]}],
+  "7-15":[{name:"World Youth Skills Day",desc:"Celebrates the strategic importance of equipping young people with skills.",un:true,wiki:"World_Youth_Skills_Day",tags:["education","rights","culture"]}],
+  "7-18":[{name:"International Nelson Mandela Day",desc:"Celebrates the life and legacy of Nelson Mandela.",un:true,wiki:"Nelson_Mandela_International_Day",tags:["peace","rights","history"]}],
+  "7-20":[
+    {name:"International Moon Day",desc:"Commemorates the first human landing on the Moon and promotes space exploration.",un:true,wiki:"International_Moon_Day",tags:["science","history"]},
+    {name:"World Chess Day",desc:"Celebrates the game of chess and its educational benefits.",un:true,wiki:"World_Chess_Day",tags:["culture","education"]}
+  ],
+  "7-30":[
+    {name:"International Day of Friendship",desc:"Promotes friendship between peoples, countries, cultures and individuals.",un:true,wiki:"International_Day_of_Friendship",tags:["culture","peace"]},
+    {name:"World Day against Trafficking in Persons",desc:"Raises awareness of the plight of human trafficking victims.",un:true,wiki:"World_Day_Against_Trafficking_in_Persons",tags:["rights","peace"]}
+  ],
+  "8-9":[{name:"International Day of the World's Indigenous Peoples",desc:"Celebrates and raises awareness of the rights of the world's indigenous peoples.",un:true,wiki:"International_Day_of_the_World%27s_Indigenous_Peoples",tags:["rights","culture"]}],
+  "8-12":[{name:"International Youth Day",desc:"Celebrates young people's contributions to global development.",un:true,wiki:"International_Youth_Day",tags:["culture","rights","education"]}],
+  "8-19":[{name:"World Humanitarian Day",desc:"Honors humanitarian workers who have lost their lives in humanitarian service.",un:true,wiki:"World_Humanitarian_Day",tags:["peace","rights"]}],
+  "8-29":[{name:"International Day against Nuclear Tests",desc:"Raises awareness about the need to ban nuclear weapon tests.",un:true,wiki:"International_Day_Against_Nuclear_Tests",tags:["peace","science"]}],
+  "9-5":[{name:"International Day of Charity",desc:"Raises awareness and mobilizes people around volunteer and philanthropic activities.",un:true,wiki:"International_Day_of_Charity",tags:["culture","rights"]}],
+  "9-8":[{name:"International Literacy Day",desc:"Raises awareness of literacy problems and promotes literacy worldwide.",un:true,wiki:"International_Literacy_Day",tags:["education"]}],
+  "9-10":[{name:"World Suicide Prevention Day",desc:"Raises awareness around the globe that suicide can be prevented.",un:false,wiki:"World_Suicide_Prevention_Day",tags:["health","rights"]}],
+  "9-15":[{name:"International Day of Democracy",desc:"Promotes and upholds the principles of democracy worldwide.",un:true,wiki:"International_Day_of_Democracy",tags:["rights","peace"]}],
+  "9-16":[{name:"International Day for Preservation of Ozone Layer",desc:"Commemorates the signing of the Montreal Protocol on ozone-depleting substances.",un:true,wiki:"International_Day_for_the_Preservation_of_the_Ozone_Layer",tags:["environment","science"]}],
+  "9-21":[{name:"International Day of Peace",desc:"Dedicated to world peace, specifically the absence of war and violence.",un:true,wiki:"International_Day_of_Peace",tags:["peace"]}],
+  "9-23":[{name:"International Day of Sign Languages",desc:"Raises awareness of the importance of sign language and rights of the deaf community.",un:true,wiki:"International_Day_of_Sign_Languages",tags:["rights","culture","language"]}],
+  "9-27":[{name:"World Tourism Day",desc:"Fosters awareness of the role of tourism within the international community.",un:true,wiki:"World_Tourism_Day",tags:["culture","environment"]}],
+  "9-28":[{name:"International Day for Universal Access to Information",desc:"Emphasizes the importance of access to information for development and democracy.",un:true,wiki:"International_Day_for_Universal_Access_to_Information",tags:["rights","education","media"]}],
+  "10-1":[{name:"International Day of Older Persons",desc:"Recognizes the contributions of older persons to society and challenges of ageing.",un:true,wiki:"International_Day_of_Older_Persons",tags:["rights","health","culture"]}],
+  "10-2":[{name:"International Day of Non-Violence",desc:"Marks Mahatma Gandhi's birthday and promotes non-violence through education.",un:true,wiki:"International_Day_of_Non-Violence",tags:["peace","history"]}],
+  "10-5":[{name:"World Teachers' Day",desc:"Celebrates teachers and their crucial role in providing quality education.",un:true,wiki:"World_Teachers%27_Day",tags:["education"]}],
+  "10-10":[{name:"World Mental Health Day",desc:"Raises awareness of mental health issues and mobilizes support for mental health.",un:true,wiki:"World_Mental_Health_Day",tags:["health"]}],
+  "10-11":[{name:"International Day of the Girl Child",desc:"Highlights challenges girls face and promotes girls' empowerment.",un:true,wiki:"International_Day_of_the_Girl_Child",tags:["women","rights","children"]}],
+  "10-16":[{name:"World Food Day",desc:"Commemorates the founding of the FAO and raises awareness of global hunger.",un:true,wiki:"World_Food_Day",tags:["food","rights","environment"]}],
+  "10-17":[{name:"International Day for Eradication of Poverty",desc:"Promotes awareness of the need to eradicate poverty and destitution.",un:true,wiki:"International_Day_for_the_Eradication_of_Poverty",tags:["rights","peace"]}],
+  "10-24":[{name:"United Nations Day",desc:"Marks the anniversary of the entry into force of the UN Charter.",un:true,wiki:"United_Nations_Day",tags:["peace","history","rights"]}],
+  "11-5":[{name:"World Tsunami Awareness Day",desc:"Raises awareness about tsunamis and promotes disaster risk reduction efforts.",un:true,wiki:"World_Tsunami_Awareness_Day",tags:["science","environment"]}],
+  "11-10":[{name:"World Science Day for Peace and Development",desc:"Highlights the significant role of science in society.",un:true,wiki:"World_Science_Day_for_Peace_and_Development",tags:["science","peace","education"]}],
+  "11-14":[{name:"World Diabetes Day",desc:"Raises global awareness of diabetes and its prevention.",un:true,wiki:"World_Diabetes_Day",tags:["health"]}],
+  "11-16":[{name:"International Day for Tolerance",desc:"Raises public awareness of the dangers of intolerance.",un:true,wiki:"International_Day_for_Tolerance",tags:["peace","culture","rights"]}],
+  "11-19":[{name:"World Toilet Day",desc:"Raises awareness about the sanitation crisis and encourages action.",un:true,wiki:"World_Toilet_Day",tags:["health","rights","environment"]}],
+  "11-20":[{name:"World Children's Day",desc:"Promotes international togetherness and improving children's welfare.",un:true,wiki:"Universal_Children%27s_Day",tags:["children","rights","culture"]}],
+  "11-25":[{name:"International Day for Elimination of Violence against Women",desc:"Raises awareness of violence against women and mobilizes action.",un:true,wiki:"International_Day_for_the_Elimination_of_Violence_against_Women",tags:["women","rights","peace"]}],
+  "12-1":[{name:"World AIDS Day",desc:"Raises awareness of the AIDS pandemic caused by HIV infection.",un:true,wiki:"World_AIDS_Day",tags:["health","rights"]}],
+  "12-3":[{name:"International Day of Persons with Disabilities",desc:"Promotes the rights and well-being of persons with disabilities.",un:true,wiki:"International_Day_of_Persons_with_Disabilities",tags:["rights","health"]}],
+  "12-5":[
+    {name:"International Volunteer Day",desc:"Promotes the work of volunteers and encourages volunteer efforts.",un:true,wiki:"International_Volunteer_Day",tags:["culture","rights"]},
+    {name:"World Soil Day",desc:"Raises awareness of the importance of soil for food security.",un:true,wiki:"World_Soil_Day",tags:["environment","food","science"]}
+  ],
+  "12-9":[{name:"International Anti-Corruption Day",desc:"Raises awareness of corruption and the role of the Convention against Corruption.",un:true,wiki:"International_Anti-Corruption_Day",tags:["rights","peace"]}],
+  "12-10":[{name:"Human Rights Day",desc:"Commemorates the adoption of the Universal Declaration of Human Rights.",un:true,wiki:"Human_Rights_Day",tags:["rights","history","peace"]}],
+  "12-18":[{name:"International Migrants Day",desc:"Highlights the contributions of migrants and the challenges they face.",un:true,wiki:"International_Migrants_Day",tags:["rights","culture"]}],
+  "12-20":[{name:"International Human Solidarity Day",desc:"Celebrates unity in diversity and the importance of solidarity against poverty.",un:true,wiki:"International_Human_Solidarity_Day",tags:["peace","rights","culture"]}],
+  "12-25":[{name:"Christmas Day",desc:"A major Christian holiday and cultural celebration worldwide.",un:false,wiki:"Christmas",tags:["culture","celebration","history"]}]
+};
+
+/* =========================================================
+   TAG CONFIG
+   ========================================================= */
+const tagConfig={
+  environment:{label:"🌿 Environment",bg:"rgba(16,185,129,.2)",border:"#10b981",color:"#6ee7b7"},
+  health:{label:"🏥 Health",bg:"rgba(239,68,68,.2)",border:"#ef4444",color:"#fca5a5"},
+  culture:{label:"🎨 Culture",bg:"rgba(139,92,246,.2)",border:"#8b5cf6",color:"#c4b5fd"},
+  science:{label:"🔬 Science",bg:"rgba(59,130,246,.2)",border:"#3b82f6",color:"#93c5fd"},
+  peace:{label:"☮️ Peace",bg:"rgba(245,158,11,.2)",border:"#f59e0b",color:"#fde68a"},
+  rights:{label:"⚖️ Rights",bg:"rgba(236,72,153,.2)",border:"#ec4899",color:"#f9a8d4"},
+  education:{label:"📚 Education",bg:"rgba(6,182,212,.2)",border:"#06b6d4",color:"#67e8f9"},
+  women:{label:"👩 Women",bg:"rgba(217,70,239,.2)",border:"#d946ef",color:"#f0abfc"},
+  children:{label:"👶 Children",bg:"rgba(249,115,22,.2)",border:"#f97316",color:"#fdba74"},
+  food:{label:"🍎 Food",bg:"rgba(132,204,22,.2)",border:"#84cc16",color:"#bef264"},
+  wildlife:{label:"🦁 Wildlife",bg:"rgba(20,184,166,.2)",border:"#14b8a6",color:"#5eead4"},
+  media:{label:"📺 Media",bg:"rgba(99,102,241,.2)",border:"#6366f1",color:"#a5b4fc"},
+  ocean:{label:"🌊 Ocean",bg:"rgba(14,165,233,.2)",border:"#0ea5e9",color:"#7dd3fc"},
+  music:{label:"🎵 Music",bg:"rgba(244,63,94,.2)",border:"#f43f5e",color:"#fda4af"},
+  history:{label:"📜 History",bg:"rgba(168,85,247,.2)",border:"#a855f7",color:"#d8b4fe"},
+  language:{label:"🗣️ Language",bg:"rgba(251,191,36,.2)",border:"#fbbf24",color:"#fde68a"},
+  celebration:{label:"🎉 Celebration",bg:"rgba(249,115,22,.2)",border:"#f97316",color:"#fdba74"}
+};
+
+/* =========================================================
+   STATE
+   ========================================================= */
+const now=new Date();
+let curMonth=now.getMonth(),curYear=now.getFullYear();
+let selectedEventKey=null,selectedEventDay=null,selectedEventData=null;
+let nominations=JSON.parse(localStorage.getItem('wcs_nominations')||'[]');
+let isDark=localStorage.getItem('wcs_theme')!=='light';
+
+/* =========================================================
+   THEME
+   ========================================================= */
+function toggleTheme(){
+  isDark=!isDark;
+  document.body.classList.toggle('light',!isDark);
+  localStorage.setItem('wcs_theme',isDark?'dark':'light');
+  document.getElementById('themeBtn').textContent=isDark?'🌙 Dark':'☀️ Light';
+}
+if(!isDark){document.body.classList.add('light');document.getElementById('themeBtn').textContent='☀️ Light';}
+
+/* =========================================================
+   CALENDAR
+   ========================================================= */
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+function buildDayNames(){
+  const g=document.getElementById('dayNames');g.innerHTML='';
+  DAYS.forEach((d,i)=>{const el=document.createElement('div');el.className='day-name';if(i===0)el.style.color='var(--r)';el.textContent=d;g.appendChild(el);});
+}
+
+function getEvents(month1,day){
+  const key=`${month1}-${day}`;
+  return internationalDays[key]||[];
+}
+
+function isWithin7Days(month1,day){
+  const today=new Date();today.setHours(0,0,0,0);
+  const target=new Date(curYear,month1-1,day);target.setHours(0,0,0,0);
+  const diff=(target-today)/(86400000);
+  return diff>=0&&diff<=7;
+}
+
+function isToday(month1,day){
+  const t=new Date();
+  return t.getFullYear()===curYear&&t.getMonth()===month1-1&&t.getDate()===day;
+}
+
+function generateCalendar(){
+  document.getElementById('calTitle').textContent=`${MONTHS[curMonth]} ${curYear}`;
+  const grid=document.getElementById('calGrid');grid.innerHTML='';
+  const firstDay=new Date(curYear,curMonth,1).getDay();
+  const daysInMonth=new Date(curYear,curMonth+1,0).getDate();
+  for(let i=0;i<firstDay;i++){const c=document.createElement('div');c.className='day-cell empty';grid.appendChild(c);}
+  for(let d=1;d<=daysInMonth;d++){
+    const m=curMonth+1;
+    const events=getEvents(m,d);
+    const cell=document.createElement('div');
+    cell.className='day-cell '+(events.length?'has-event':'no-event');
+    if(isToday(m,d))cell.classList.add('today');
+    if(isWithin7Days(m,d)&&events.length)cell.classList.add('trending-day');
+    cell.dataset.day=d;cell.dataset.month=m;
+    cell.innerHTML=`<div class="day-num">${d}</div>`;
+    if(events.length){
+      if(events.length===1){
+        cell.innerHTML+=`<div class="event-pill">${events[0].name.split(' ').slice(0,3).join(' ')}</div>`;
+      } else {
+        cell.innerHTML+=`<div class="event-pill">${events[0].name.split(' ').slice(0,2).join(' ')}</div>`;
+        cell.innerHTML+=`<div class="multi-pill">+${events.length-1} more</div>`;
+      }
+      cell.addEventListener('click',()=>showEventPanel(m,d,events,cell));
+    }
+    grid.appendChild(cell);
+  }
+}
+
+function changeMonth(dir){
+  curMonth+=dir;
+  if(curMonth<0){curMonth=11;curYear--;}
+  if(curMonth>11){curMonth=0;curYear++;}
+  generateCalendar();
+  closeEventPanel();
+}
+
+function goToday(){curMonth=now.getMonth();curYear=now.getFullYear();generateCalendar();closeEventPanel();}
+
+/* =========================================================
+   TRENDING BANNER
+   ========================================================= */
+function buildTrending(){
+  const today=new Date();today.setHours(0,0,0,0);
+  const items=[];
+  for(let dd=0;dd<=14;dd++){
+    const d=new Date(today);d.setDate(d.getDate()+dd);
+    const key=`${d.getMonth()+1}-${d.getDate()}`;
+    const evts=internationalDays[key];
+    if(evts){
+      evts.forEach(e=>{
+        items.push({name:e.name,days:dd,month:d.getMonth()+1,day:d.getDate()});
+      });
+    }
+  }
+  const html=items.map(i=>`<div class="t-chip" onclick="jumpToDate(${i.month},${i.day})"><span class="days">${i.days===0?'Today':i.days===1?'Tomorrow':'In '+i.days+' days'}</span> · ${i.name}</div>`).join('');
+  document.getElementById('trendingItems').innerHTML=html;
+  document.getElementById('trendingItems2').innerHTML=html;
+  if(!items.length)document.getElementById('trendingBanner').style.display='none';
+}
+
+function jumpToDate(month1,day){
+  curMonth=month1-1;curYear=new Date().getFullYear();
+  generateCalendar();
+  setTimeout(()=>{
+    const cell=document.querySelector(`.day-cell[data-day="${day}"][data-month="${month1}"]`);
+    if(cell)cell.click();
+  },100);
+}
+
+/* =========================================================
+   EVENT PANEL
+   ========================================================= */
+function showEventPanel(month1,day,events,cell){
+  document.querySelectorAll('.day-cell.selected').forEach(c=>c.classList.remove('selected'));
+  cell.classList.add('selected');
+  selectedEventDay={month1,day};selectedEventData=events;
+
+  const panel=document.getElementById('eventPanel');
+  document.getElementById('epDate').textContent=`${MONTHS[month1-1]} ${day}, ${curYear}`;
+  
+  // Gather all unique tags
+  const allTags=new Set();
+  events.forEach(e=>e.tags&&e.tags.forEach(t=>allTags.add(t)));
+  document.getElementById('epTags').innerHTML=[...allTags].map(t=>{
+    const tc=tagConfig[t];if(!tc)return '';
+    return `<span class="tag" style="background:${tc.bg};border-color:${tc.border};color:${tc.color}">${tc.label}</span>`;
+  }).join('');
+
+  document.getElementById('epTitle').textContent=events.length===1?events[0].name:`${events.length} Events`;
+
+  const eventsHtml=events.map((e,i)=>`
+    <div class="ep-event">
+      <div class="ep-event-name">
+        ${e.name}
+        ${e.un?'<span class="un-badge">🇺🇳 UN</span>':''}
+      </div>
+      <p class="ep-desc">${e.desc}</p>
+      <div class="wiki-status wiki-checking" id="wikiStatus${i}" onclick="openWikiLink('${e.wiki}')">⏳ Checking Wikipedia...</div>
+      <div class="ep-actions">
+        <button class="btn btn-primary" onclick="openNomination(${i})">📝 Nominate</button>
+        <button class="btn btn-outline" onclick="openCaption(${i})">✨ AI Caption</button>
+        <button class="btn btn-green" onclick="shareEvent(${i})">🔗 Share</button>
+        <button class="btn btn-yellow" onclick="quickGCal(${i})">📆 Calendar</button>
+        <a href="https://en.wikipedia.org/wiki/${e.wiki}" target="_blank" class="btn btn-outline">📖 Wikipedia</a>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('epEvents').innerHTML=eventsHtml;
+  panel.classList.add('visible');
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+
+  // Check Wikipedia status
+  events.forEach((e,i)=>checkWikipedia(e.wiki,i));
+}
+
+function closeEventPanel(){
+  document.getElementById('eventPanel').classList.remove('visible');
+  document.querySelectorAll('.day-cell.selected').forEach(c=>c.classList.remove('selected'));
+}
+
+async function checkWikipedia(wikiTitle,idx){
+  const el=document.getElementById(`wikiStatus${idx}`);
+  if(!el||!wikiTitle)return;
+  try{
+    const r=await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${wikiTitle}`);
+    if(r.ok){
+      const d=await r.json();
+      const isStub=d.extract&&d.extract.length<300;
+      el.className=`wiki-status ${isStub?'wiki-checking':'wiki-ok'}`;
+      el.innerHTML=`${isStub?'⚠️':'✅'} ${isStub?'Wikipedia Stub – expand it!':'Wikipedia Article Exists'} — <em>${d.titles?.normalized||wikiTitle}</em>`;
+      el.style.cursor='pointer';
+    } else {
+      el.className='wiki-status wiki-missing';
+      el.innerHTML='❌ No Wikipedia article found – create one!';
+    }
+  }catch{
+    el.className='wiki-status wiki-missing';
+    el.innerHTML='⚠️ Could not check Wikipedia status';
+  }
+}
+
+function openWikiLink(title){
+  window.open(`https://en.wikipedia.org/wiki/${title}`,'_blank');
+}
+
+/* =========================================================
+   NOMINATION
+   ========================================================= */
+let nomEventIdx=0;
+function openNomination(idx){
+  nomEventIdx=idx;
+  const e=selectedEventData[idx];
+  const key=`${selectedEventDay.month1}-${selectedEventDay.day}`;
+  document.getElementById('nomEventInfo').innerHTML=`<strong>${e.name}</strong><br>${MONTHS[selectedEventDay.month1-1]} ${selectedEventDay.day}, ${curYear}`;
+  document.querySelectorAll('.platform-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('nominationModal').classList.add('open');
+}
+
+function togglePlatform(el){el.classList.toggle('selected');}
+
+function getSelectedPlatforms(){
+  return [...document.querySelectorAll('.platform-btn.selected')].map(b=>b.dataset.platform);
+}
+
+function submitNomination(){
+  const name=document.getElementById('nomName').value.trim();
+  const email=document.getElementById('nomEmail').value.trim();
+  const team=document.getElementById('nomTeam').value.trim();
+  const platforms=getSelectedPlatforms();
+  if(!name){showToast('Please enter your name','error');return;}
+  if(!email||!email.includes('@')){showToast('Please enter a valid email','error');return;}
+  if(!platforms.length){showToast('Please select at least one platform','error');return;}
+  const e=selectedEventData[nomEventIdx];
+  const nom={
+    id:Date.now(),name,email,team,platforms,
+    eventName:e.name,
+    eventDate:`${curYear}-${String(selectedEventDay.month1).padStart(2,'0')}-${String(selectedEventDay.day).padStart(2,'0')}`,
+    wikiTitle:e.wiki,
+    reminders:{r7:document.getElementById('rem7').checked,r2:document.getElementById('rem2').checked,r1:document.getElementById('rem1').checked},
+    createdAt:new Date().toISOString()
+  };
+  nominations.push(nom);
+  localStorage.setItem('wcs_nominations',JSON.stringify(nominations));
+  closeModal('nominationModal');
+  updateNominationsList();
+  updateLeaderboard();
+  showToast(`✅ Nominated! Download .ics or add to Google Calendar for reminders.`,'success');
+}
+
+function deleteNomination(id){
+  nominations=nominations.filter(n=>n.id!==id);
+  localStorage.setItem('wcs_nominations',JSON.stringify(nominations));
+  updateNominationsList();
+  updateLeaderboard();
+}
+
+function updateNominationsList(){
+  const el=document.getElementById('nominationsList');
+  if(!nominations.length){el.innerHTML='<div class="empty-state">No nominations yet.<br>Click any event to nominate!</div>';return;}
+  const sorted=[...nominations].sort((a,b)=>a.eventDate.localeCompare(b.eventDate));
+  el.innerHTML=sorted.map(n=>{
+    const d=new Date(n.eventDate+'T00:00:00');
+    const today=new Date();today.setHours(0,0,0,0);
+    const diff=Math.ceil((d-today)/86400000);
+    const diffText=diff<0?'Past':diff===0?'Today':diff===1?'Tomorrow':diff+' days';
+    return `<div class="nom-item">
+      <div class="nom-item-date">📅 ${MONTHS[d.getMonth()]} ${d.getDate()} · <span style="color:${diff<=2&&diff>=0?'var(--r)':'var(--y)'}">${diffText}</span></div>
+      <div class="nom-item-name">${n.name}</div>
+      <div class="nom-item-meta">${n.eventName}<br>${n.platforms.join(', ')}</div>
+      <button class="nom-item-del" onclick="deleteNomination(${n.id})" title="Remove">✕</button>
+    </div>`;
+  }).join('');
+}
+
+/* =========================================================
+   GOOGLE CALENDAR
+   ========================================================= */
+function addToGoogleCalendar(){
+  const e=selectedEventData?.[nomEventIdx];
+  if(!e||!selectedEventDay)return;
+  const d=`${curYear}${String(selectedEventDay.month1).padStart(2,'0')}${String(selectedEventDay.day).padStart(2,'0')}`;
+  const title=encodeURIComponent(`📅 ${e.name} – Create Social Media Post`);
+  const details=encodeURIComponent(`Create and publish a post about ${e.name}\n${e.desc}\n\nWikipedia: https://en.wikipedia.org/wiki/${e.wiki}\n\nNominated via Wiki Club SATI Content Planner`);
+  const url=`https://calendar.google.com/calendar/r/eventedit?text=${title}&dates=${d}/${d}&details=${details}`;
+  window.open(url,'_blank');
+  showToast('Opening Google Calendar...','success');
+}
+
+function quickGCal(idx){
+  const e=selectedEventData[idx];
+  if(!e||!selectedEventDay)return;
+  const d=`${curYear}${String(selectedEventDay.month1).padStart(2,'0')}${String(selectedEventDay.day).padStart(2,'0')}`;
+  const title=encodeURIComponent(`📅 ${e.name}`);
+  const details=encodeURIComponent(e.desc);
+  const url=`https://calendar.google.com/calendar/r/eventedit?text=${title}&dates=${d}/${d}&details=${details}`;
+  window.open(url,'_blank');
+}
+
+/* =========================================================
+   ICS DOWNLOAD
+   ========================================================= */
+function makeICS(events_arr){
+  const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//WikiClubSATI//ContentPlanner//EN','CALSCALE:GREGORIAN'];
+  events_arr.forEach(n=>{
+    const d=n.eventDate.replace(/-/g,'');
+    lines.push('BEGIN:VEVENT');
+    lines.push(`DTSTART;VALUE=DATE:${d}`);
+    lines.push(`DTEND;VALUE=DATE:${d}`);
+    lines.push(`SUMMARY:📅 ${n.eventName} – Post on ${n.platforms.join(', ')}`);
+    lines.push(`DESCRIPTION:Create and publish content for ${n.eventName}. Nominated by ${n.name}.`);
+    lines.push(`UID:${n.id}@wikiclutsati`);
+    if(n.reminders.r1){lines.push('BEGIN:VALARM');lines.push('TRIGGER:-P1D');lines.push('ACTION:DISPLAY');lines.push('DESCRIPTION:Reminder: Post tomorrow!');lines.push('END:VALARM');}
+    if(n.reminders.r2){lines.push('BEGIN:VALARM');lines.push('TRIGGER:-P2D');lines.push('ACTION:DISPLAY');lines.push('DESCRIPTION:Reminder: Post in 2 days!');lines.push('END:VALARM');}
+    if(n.reminders.r7){lines.push('BEGIN:VALARM');lines.push('TRIGGER:-P7D');lines.push('ACTION:DISPLAY');lines.push('DESCRIPTION:Reminder: Post in 1 week!');lines.push('END:VALARM');}
+    lines.push('END:VEVENT');
+  });
+  lines.push('END:VCALENDAR');
+  return lines.join('\r\n');
+}
+
+function downloadEventICS(){
+  const e=selectedEventData?.[nomEventIdx];
+  if(!e||!selectedEventDay)return;
+  const n={id:Date.now(),eventName:e.name,eventDate:`${curYear}-${String(selectedEventDay.month1).padStart(2,'0')}-${String(selectedEventDay.day).padStart(2,'0')}`,platforms:getSelectedPlatforms().length?getSelectedPlatforms():['Social Media'],name:document.getElementById('nomName').value||'Creator',reminders:{r1:document.getElementById('rem1').checked,r2:document.getElementById('rem2').checked,r7:document.getElementById('rem7').checked}};
+  downloadBlob(makeICS([n]),`${e.name.replace(/\s+/g,'_')}.ics`,'text/calendar');
+  showToast('📅 ICS file downloaded – import to any calendar app!','success');
+}
+
+function exportICS(){
+  if(!nominations.length){showToast('No nominations to export','error');return;}
+  downloadBlob(makeICS(nominations),'wiki_club_sati_nominations.ics','text/calendar');
+  showToast('📆 All nominations exported to ICS!','success');
+}
+
+function exportCSV(){
+  if(!nominations.length){showToast('No nominations to export','error');return;}
+  const rows=[['Name','Email','Team','Event','Date','Platforms','Created']];
+  nominations.forEach(n=>rows.push([n.name,n.email,n.team||'',n.eventName,n.eventDate,n.platforms.join(';'),n.createdAt]));
+  const csv=rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
+  downloadBlob(csv,'wiki_club_sati_nominations.csv','text/csv');
+  showToast('📊 CSV exported!','success');
+}
+
+function downloadBlob(content,filename,type){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type}));
+  a.download=filename;a.click();
+}
+
+/* =========================================================
+   AI CAPTION GENERATOR
+   ========================================================= */
+let captionEventIdx=0;
+function openCaption(idx){
+  captionEventIdx=idx;
+  const e=selectedEventData[idx];
+  document.getElementById('captionEventInfo').innerHTML=`<strong>${e.name}</strong> · ${MONTHS[selectedEventDay.month1-1]} ${selectedEventDay.day}`;
+  document.getElementById('captionOutput').innerHTML='';
+  const savedKey=localStorage.getItem('wcs_apikey')||'';
+  document.getElementById('apiKeyInput').value=savedKey;
+  document.getElementById('captionModal').classList.add('open');
+}
+
+async function generateCaption(){
+  const e=selectedEventData[captionEventIdx];
+  const platform=document.getElementById('captionPlatform').value;
+  const tone=document.getElementById('captionTone').value;
+  const apiKey=document.getElementById('apiKeyInput').value.trim();
+  if(apiKey)localStorage.setItem('wcs_apikey',apiKey);
+
+  const out=document.getElementById('captionOutput');
+  out.innerHTML=`<div class="caption-loading"><div class="spinner"></div> Generating caption...</div>`;
+
+  if(apiKey&&apiKey.startsWith('sk-')){
+    // Real AI via Anthropic API
+    try{
+      const prompt=`Generate a compelling ${tone.toLowerCase()} social media caption for ${platform} about ${e.name} (${MONTHS[selectedEventDay.month1-1]} ${selectedEventDay.day}).\n\nEvent description: ${e.desc}\n\nRequirements:\n- Platform-optimized for ${platform}\n- Tone: ${tone}\n- Include relevant hashtags\n- Include a call-to-action\n- Mention Wikipedia if relevant (article: https://en.wikipedia.org/wiki/${e.wiki})\n- For Wiki Club SATI – a student Wikimedia club\n\nProvide only the caption text, ready to post.`;
+      const res=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01'},
+        body:JSON.stringify({model:'claude-opus-4-6',max_tokens:600,messages:[{role:'user',content:prompt}]})
+      });
+      if(!res.ok)throw new Error('API error '+res.status);
+      const data=await res.json();
+      const caption=data.content[0].text;
+      out.innerHTML=`<div class="caption-output">${caption}</div><button class="btn btn-outline" style="margin-top:10px;width:100%" onclick="copyCaption()">📋 Copy Caption</button>`;
+      out.dataset.caption=caption;
+    }catch(err){
+      out.innerHTML=`<div style="color:var(--y);font-size:.8rem;margin-bottom:10px">⚠️ API call failed (CORS or invalid key). Using smart template instead.</div>`;
+      out.innerHTML+=renderTemplateCaption(e,platform,tone);
+    }
+  } else {
+    // Smart template-based generation
+    await new Promise(r=>setTimeout(r,1200)); // simulate thinking
+    out.innerHTML=renderTemplateCaption(e,platform,tone);
+  }
+}
+
+function renderTemplateCaption(e,platform,tone){
+  const captions={
+    Instagram:{
+      "Informative & Professional":`🌍 Today marks a special moment — ${e.name}.\n\n${e.desc}\n\nAs content creators and Wikimedians, let's use this day to spread awareness and ensure this knowledge is accessible to all on Wikipedia.\n\n📖 Learn more: en.wikipedia.org/wiki/${e.wiki}\n\n#${e.name.replace(/\s+/g,'')} #WikiClubSATI #Wikipedia #OpenKnowledge #InternationalDay`,
+      "Inspiring & Motivational":`✨ ${e.name} reminds us of something important.\n\n${e.desc}\n\nEvery action, every article, every post we create has the power to inspire change. Let's make it count today! 💪\n\n📖 ${e.wiki.replace(/_/g,' ')} | Wikipedia\n\n#${e.name.split(' ').slice(-2).join('')} #WikiClubSATI #Inspiration`,
+      "Casual & Fun":`Hey everyone! Did you know it's ${e.name}? 🎉\n\n${e.desc}\n\nWe at Wiki Club SATI are celebrating by creating awesome content about it! Go check out the Wikipedia article 👇\n\nen.wikipedia.org/wiki/${e.wiki}\n\n#WikiClubSATI #${e.name.split(' ').slice(-1)[0]} #FunFacts`,
+      "Call-to-Action":`📢 ${e.name} is HERE!\n\n${e.desc}\n\n👉 Here's what YOU can do today:\n✅ Share this post\n✅ Edit the Wikipedia article\n✅ Create graphics for your community\n\n📖 en.wikipedia.org/wiki/${e.wiki}\n\n#WikiClubSATI #TakeAction #${e.name.replace(/\s+/g,'').slice(0,20)}`
+    },
+    LinkedIn:{
+      "Informative & Professional":`Today, the global community observes ${e.name}.\n\n${e.desc}\n\nAt Wiki Club SATI, we are committed to ensuring that free knowledge is accessible to all. On this occasion, I encourage everyone to contribute to Wikipedia articles related to this important day and amplify awareness through your networks.\n\n🔗 Wikipedia: en.wikipedia.org/wiki/${e.wiki}\n\n#${e.name.replace(/\s+/g,'')} #WikipediaContributor #OpenKnowledge #WikiClubSATI`,
+      "Call-to-Action":`${e.name} — a moment for action.\n\n${e.desc}\n\nAs knowledge creators and digital advocates, we have a responsibility to document, share, and amplify critical information. Today, I invite you to:\n\n▸ Share this with your network\n▸ Contribute to Wikipedia on this topic\n▸ Create content that educates your audience\n\nKnowledge is power. Let's democratize it.\n\n🔗 en.wikipedia.org/wiki/${e.wiki}\n\n#WikiClubSATI #KnowledgeForAll #${e.name.replace(/\s+/g,'')}`
+    },
+    "Twitter/X":{
+      "Informative & Professional":`Today is ${e.name} 🌍\n\n${e.desc.slice(0,100)}...\n\n📖 Read more: en.wikipedia.org/wiki/${e.wiki}\n\n#${e.name.replace(/\s+/g,'')} #WikiClubSATI`,
+      "Casual & Fun":`It's ${e.name}! 🎉 Did you know? ${e.desc.slice(0,80)}...\n\nWe're creating content for this — join us! 👇\nen.wikipedia.org/wiki/${e.wiki}\n#WikiClubSATI`
+    }
+  };
+  const platCaps=captions[platform]||captions['Instagram'];
+  const cap=platCaps[tone]||Object.values(platCaps)[0];
+  return `<div class="caption-output" id="captionText">${cap}</div><button class="btn btn-outline" style="margin-top:10px;width:100%" onclick="copyCaption()">📋 Copy Caption</button>`;
+}
+
+function copyCaption(){
+  const el=document.getElementById('captionText')||document.querySelector('.caption-output');
+  if(!el)return;
+  navigator.clipboard.writeText(el.textContent).then(()=>showToast('✅ Caption copied!','success'));
+}
+
+/* =========================================================
+   SHARE
+   ========================================================= */
+function shareEvent(idx){
+  const e=selectedEventData[idx];
+  const url=`${location.origin}${location.pathname}?event=${encodeURIComponent(e.name)}&month=${selectedEventDay.month1}&day=${selectedEventDay.day}`;
+  document.getElementById('shareUrl').textContent=url;
+  document.getElementById('shareModal').classList.add('open');
+}
+
+function copyShareLink(){
+  const url=document.getElementById('shareUrl').textContent;
+  navigator.clipboard.writeText(url).then(()=>showToast('🔗 Link copied!','success'));
+}
+
+/* =========================================================
+   LEADERBOARD
+   ========================================================= */
+function updateLeaderboard(){
+  const el=document.getElementById('leaderboard');
+  const teams={};
+  nominations.forEach(n=>{
+    const t=n.team||n.name||'Anonymous';
+    teams[t]=(teams[t]||0)+1;
+  });
+  const sorted=Object.entries(teams).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  if(!sorted.length){el.innerHTML='<div class="empty-state">No entries yet</div>';return;}
+  const max=sorted[0][1];
+  const rankClasses=['ldr-rank-1','ldr-rank-2','ldr-rank-3'];
+  el.innerHTML=sorted.map(([name,count],i)=>`
+    <div class="ldr-item">
+      <div class="ldr-rank ${rankClasses[i]||'ldr-rank-n'}">${i+1}</div>
+      <div class="ldr-bar">
+        <div class="ldr-name">${name}</div>
+        <div class="ldr-count">${count} nomination${count>1?'s':''}</div>
+        <div class="ldr-progress"><div class="ldr-fill" style="width:${(count/max*100).toFixed(0)}%"></div></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* =========================================================
+   ADMIN PANEL
+   ========================================================= */
+function openAdmin(){
+  const pwd=localStorage.getItem('wcs_admin_verified');
+  if(pwd!=='yes'){
+    const pass=prompt('Enter admin password:');
+    if(pass!=='wikiclutsati'){showToast('❌ Incorrect password','error');return;}
+    localStorage.setItem('wcs_admin_verified','yes');
+  }
+  renderAdmin();
+  document.getElementById('adminModal').classList.add('open');
+}
+
+function renderAdmin(){
+  const total=nominations.length;
+  const platforms={};
+  const events={};
+  nominations.forEach(n=>{
+    n.platforms.forEach(p=>platforms[p]=(platforms[p]||0)+1);
+    events[n.eventName]=(events[n.eventName]||0)+1;
+  });
+  const topEvent=Object.entries(events).sort((a,b)=>b[1]-a[1])[0];
+  const topPlatform=Object.entries(platforms).sort((a,b)=>b[1]-a[1])[0];
+  const rows=nominations.length?nominations.map(n=>`<tr><td>${n.name}</td><td>${n.team||'–'}</td><td>${n.eventName}</td><td>${n.eventDate}</td><td>${n.platforms.join(', ')}</td><td>${n.email}</td></tr>`).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--tx2)">No nominations yet</td></tr>';
+  document.getElementById('adminContent').innerHTML=`
+    <div class="modal-title">🔐 Admin Panel</div>
+    <div class="admin-stats">
+      <div class="stat-box"><div class="stat-num">${total}</div><div class="stat-label">Total Nominations</div></div>
+      <div class="stat-box"><div class="stat-num">${topEvent?topEvent[1]:0}</div><div class="stat-label">Top Event Nominations</div></div>
+      <div class="stat-box"><div class="stat-num">${Object.keys(events).length}</div><div class="stat-label">Unique Events</div></div>
+    </div>
+    ${topEvent?`<p style="font-size:.82rem;color:var(--tx2);margin-bottom:6px">🏆 Most popular event: <strong style="color:var(--pl)">${topEvent[0]}</strong></p>`:''}
+    ${topPlatform?`<p style="font-size:.82rem;color:var(--tx2);margin-bottom:16px">📱 Most used platform: <strong style="color:var(--cl)">${topPlatform[0]}</strong></p>`:''}
+    <div style="overflow-x:auto">
+      <table class="admin-table">
+        <thead><tr><th>Name</th><th>Team</th><th>Event</th><th>Date</th><th>Platforms</th><th>Email</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+      <button class="btn btn-outline" onclick="exportCSV()">📊 Export CSV</button>
+      <button class="btn btn-outline" onclick="exportICS()">📆 Export ICS</button>
+      <button class="btn btn-outline" style="color:var(--r);border-color:var(--r)" onclick="clearAllNominations()">🗑️ Clear All</button>
+      <button class="btn btn-outline" onclick="localStorage.removeItem('wcs_admin_verified')">🔒 Lock Admin</button>
+    </div>
+  `;
+}
+
+function clearAllNominations(){
+  if(!confirm('Are you sure you want to delete ALL nominations? This cannot be undone.'))return;
+  nominations=[];localStorage.setItem('wcs_nominations','[]');
+  updateNominationsList();updateLeaderboard();renderAdmin();
+  showToast('All nominations cleared','success');
+}
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+function buildSearchIndex(){
+  const idx=[];
+  Object.entries(internationalDays).forEach(([key,evts])=>{
+    const [m,d]=key.split('-').map(Number);
+    evts.forEach(e=>{idx.push({key,m,d,name:e.name,desc:e.desc});});
+  });
+  return idx;
+}
+const searchIndex=buildSearchIndex();
+
+document.getElementById('searchInput').addEventListener('input',function(){
+  const q=this.value.trim().toLowerCase();
+  const res=document.getElementById('searchResults');
+  if(q.length<2){res.classList.remove('open');return;}
+  const matches=searchIndex.filter(i=>i.name.toLowerCase().includes(q)||i.desc.toLowerCase().includes(q)).slice(0,8);
+  if(!matches.length){res.classList.remove('open');return;}
+  res.innerHTML=matches.map(i=>`<div class="sr-item" onclick="jumpToDate(${i.m},${i.d})"><div class="sr-item-name">${i.name}</div><div class="sr-item-date">${MONTHS[i.m-1]} ${i.d}</div></div>`).join('');
+  res.classList.add('open');
+});
+
+document.addEventListener('click',e=>{if(!e.target.closest('.nav-search'))document.getElementById('searchResults').classList.remove('open');});
+
+/* =========================================================
+   MODAL UTILS
+   ========================================================= */
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});});
+
+/* =========================================================
+   URL PARAMS – Deep linking to events
+   ========================================================= */
+function handleUrlParams(){
+  const p=new URLSearchParams(location.search);
+  const month=parseInt(p.get('month')),day=parseInt(p.get('day'));
+  if(month&&day){
+    curMonth=month-1;generateCalendar();
+    setTimeout(()=>{
+      const cell=document.querySelector(`.day-cell[data-day="${day}"][data-month="${month}"]`);
+      if(cell)cell.click();
+    },300);
+  }
+}
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+function showToast(msg,type='success'){
+  const t=document.createElement('div');
+  t.className=`toast ${type}`;t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>{t.style.animation='slideIn .3s ease reverse';setTimeout(()=>t.remove(),300);},3000);
+}
+
+/* =========================================================
+   REMINDERS CHECK (Browser Notifications)
+   ========================================================= */
+function checkReminders(){
+  if(!('Notification' in window))return;
+  Notification.requestPermission().then(perm=>{
+    if(perm!=='granted')return;
+    const today=new Date();today.setHours(0,0,0,0);
+    nominations.forEach(n=>{
+      const d=new Date(n.eventDate+'T00:00:00');
+      const diff=Math.ceil((d-today)/86400000);
+      if((diff===1&&n.reminders.r1)||(diff===2&&n.reminders.r2)||(diff===7&&n.reminders.r7)){
+        new Notification(`📅 Reminder: ${n.eventName}`,{body:`${diff===1?'Tomorrow':'In '+diff+' days'} — Remember to post on ${n.platforms.join(', ')}!`,icon:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/WIKI_CLUB_SATI_Logo.svg/1280px-WIKI_CLUB_SATI_Logo.svg.png'});
+      }
+    });
+  });
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+buildDayNames();
+generateCalendar();
+buildTrending();
+updateNominationsList();
+updateLeaderboard();
+handleUrlParams();
+checkReminders();
+</script>
+</body>
+</html>
